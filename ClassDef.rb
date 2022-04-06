@@ -16,6 +16,9 @@ def parse_args
 		puts "Not implemented! Sorry."
 		exit
 	end
+
+	#--hard: replace the json file with the new struct defintion
+	#--with-defaults: use the values in the json as default values in the generated struct
 end
 
 json_hash = JSON.parse(parse_args)

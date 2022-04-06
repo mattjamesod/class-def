@@ -17,6 +17,8 @@ class SwiftStructGenerator
 	end
 	
 	def get_type_of(value)
+		return "Bool" if (value === true || value === false)
+
 		return "Int" if value.is_a? Integer
 	
 		return "String"
