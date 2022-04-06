@@ -1,7 +1,7 @@
 require 'json'
 require './Property.rb'
 
-def parseArgs
+def parse_args
 	if ARGV.size < 1
 		puts "JSON not specified. Options:\n\n--inline \"{\\\"some\\\":\\\"value\\\"}\"\n--dir path/to/some/data.json"
 		exit
@@ -20,7 +20,7 @@ end
 T_SWIFT_STRUCT = "struct STRUCT_NAME {PROP_LIST\n}"
 T_SWIFT_PROPERTY = "\n    var PROP_NAME: PROP_TYPE"
 
-def generateSwiftStruct(props)
+def generate_swift_struct(props)
 	property_list = props
 		.map do |prop| 
 			T_SWIFT_PROPERTY
@@ -34,13 +34,16 @@ def generateSwiftStruct(props)
 		.sub("PROP_LIST", property_list)
 end
 
-json = parseArgs
+def get_swift_type_of(value)
+	return "Int" if value.is_a? Integer
 
-json_hash = JSON.parse(json)
+	return "String"
+end
 
-json_hash.map { |key, value| puts "#{key} - #{value}" }
+json_hash = JSON.parse(parse_args)
 
-root_keys = json_hash.keys
-root_values = json_hash.values
+props = json_hash.map do |key, value|
+	Property.new(key, get_swift_type_of(value))
+end
 
-puts generateSwiftStruct(root_keys.map{ |key| Property.new(key, "String")})
+puts generate_swift_struct(props)
