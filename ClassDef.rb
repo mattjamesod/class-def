@@ -1,5 +1,6 @@
 require 'json'
 require './Property.rb'
+require './SwiftStructGenerator.rb'
 
 def parse_args
 	if ARGV.size < 1
@@ -17,33 +18,12 @@ def parse_args
 	end
 end
 
-T_SWIFT_STRUCT = "struct STRUCT_NAME {PROP_LIST\n}"
-T_SWIFT_PROPERTY = "\n    var PROP_NAME: PROP_TYPE"
-
-def generate_swift_struct(props)
-	property_list = props
-		.map do |prop| 
-			T_SWIFT_PROPERTY
-				.gsub("PROP_NAME", prop.name)
-				.gsub("PROP_TYPE", prop.type) 
-		end
-		.reduce(:+)
-
-	return T_SWIFT_STRUCT
-		.sub("STRUCT_NAME", "GeneratedStruct")
-		.sub("PROP_LIST", property_list)
-end
-
-def get_swift_type_of(value)
-	return "Int" if value.is_a? Integer
-
-	return "String"
-end
-
 json_hash = JSON.parse(parse_args)
 
+generator = SwiftStructGenerator.new()
+
 props = json_hash.map do |key, value|
-	Property.new(key, get_swift_type_of(value))
+	Property.new(key, generator.get_type_of(value))
 end
 
-puts generate_swift_struct(props)
+puts generator.generate_struct(props)
