@@ -1,12 +1,12 @@
 class Property
-	attr_accessor :name, :type
+	attr_accessor :name, :signature
 
-	def initialize(name, type)
+	def initialize(name, signature)
 		@name = name
-		@type = type
+		@signature = signature
 	end
 
-	def nested_type_name
+	def nested_signature_name
 		"Generated#{name.capitalize}Struct"
 	end
 end
