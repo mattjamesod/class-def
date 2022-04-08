@@ -13,8 +13,7 @@ def parse_args
 	end
 	
 	if ["-directory","-dir","-d"].include?(ARGV[0])
-		puts "Not implemented! Sorry."
-		exit
+		return File.open(ARGV[1]).read
 	end
 
 	#--hard: replace the json file with the new struct defintion
