@@ -25,8 +25,6 @@ json_hash = JSON.parse(parse_args)
 
 generator = SwiftStructGenerator.new()
 
-props = json_hash.map do |key, value|
-	Property.new(key, generator.get_type_of(value))
-end
+props = generator.map_properties(json_hash)
 
 puts generator.generate_struct(props)
