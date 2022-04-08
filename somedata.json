@@ -1,12 +1,10 @@
 {
-    "some": 10,
-    "values": true,
-    "nested_value": {
-    	"string1": "hello",
-    	"string2": "world"
-    },
-    "arr": [
-    	"ele1",
-    	"ele2"
+    "ComplexArray": [
+    	{
+    		"Some": "data"
+    	},
+    	{
+    		"AnInt": 10
+    	}
     ]
 }

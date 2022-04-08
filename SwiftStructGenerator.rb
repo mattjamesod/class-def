@@ -1,5 +1,5 @@
 class SwiftStructGenerator
-	T_STRUCT = "struct STRUCT_NAME {PROP_LIST\n}\n\n"
+	T_STRUCT = "struct STRUCT_NAME: Codable {PROP_LIST\n}\n\n"
 	T_PROPERTY = "\n    var PROP_NAME: PROP_TYPE"
 	
 	def generate_struct(hash, name = "GeneratedStruct")
@@ -14,7 +14,7 @@ class SwiftStructGenerator
 			.map do |prop| 
 				T_PROPERTY
 					.gsub("PROP_NAME", prop.name)
-					.gsub("PROP_TYPE", (prop.signature.is_a? String) ? prop.signature : prop.nested_signature_name) 
+					.gsub("PROP_TYPE", prop.type_name) 
 			end
 			.reduce(:+)
 	
@@ -30,25 +30,21 @@ class SwiftStructGenerator
 	end
 
 	def map_properties(hash)
+		return get_signature_of(hash[0]) if hash.is_a? Array
+
 		hash.map do |key, value|
-			Property.new(key, get_signature_of(value))
+			Property.new(key, get_signature_of(value), (value.is_a? Array))
 		end
-	end
-
-	def get_array_type_of(value)
-		return nil unless value.is_a? Array
-
-		get_signature_of(value[0])
 	end
 	
 	def get_signature_of(value)
-		return "[#{get_array_type_of(value)}]" if value.is_a? Array
-
 		return "Bool" if (value === true || value === false)
 
 		return "Int" if value.is_a? Integer
 	
 		return "String" if value.is_a? String
+
+		return "String" if value.nil?
 
 		# nested struct
 		map_properties(value)
